@@ -4,6 +4,21 @@ class PlayerTriggerStat(object):
         self._player_id = player_id
         self.player_class = player_class
         self.position = None
+        self.team = None
+        self.alive = None
+
+
+class PlayersTriggerStat(object):
+    # stats of all players during a trigger tick
+    def __init__(self):
+        self.players_red = []
+        self.players_blue = []
+
+    def add_player(self, player_trigger_stat):
+        if player_trigger_stat.team == "red":
+            self.players_red.append(player_trigger_stat)
+        elif player_trigger_stat.team == "blue":
+            self.players_blue.append(player_trigger_stat)
 
 
 class DamageStats(object):
