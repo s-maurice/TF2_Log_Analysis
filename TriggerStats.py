@@ -1,10 +1,12 @@
 class PlayerTriggerStat(object):
     # stats of a player during a trigger tick
     def __init__(self, player_id, player_class):
-        self._player_id = player_id
+        self.steam_id = None
+        self.name = None
+        self.player_id = player_id
         self.player_class = player_class
         self.position = None
-        self.team = None
+        self.team = {"Red": False, "Blue": False}
         self.alive = None
 
 
@@ -66,3 +68,22 @@ class PointCaptureStats(object):
 
         self.num_cappers = 0
         self.cappers = []  # list of PlayerTriggerStats with given position
+
+
+class HealTriggerStat(object):
+    # stat for each heal trigger
+    def __init__(self):
+        self.healing = 0
+        self.arrow = False  # is healing from crusaders crossbow
+
+        self.healer = None  # instance of PlayerTriggerStat
+        self.receiver = None  # instance of PlayerTriggerStat
+
+
+class ItemPickupStat(object):
+    # stat from each item pickup
+    def __init__(self, item, player):
+        self.healing = 0
+        self.item = item
+
+        self.player = None  # instance of PlayerTriggerStat

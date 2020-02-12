@@ -5,37 +5,32 @@ class PlayerRoundStats(object):
         self.round_length = 0
         self.round_winner = None
 
-        self.accuracy = 0
-
         # all-class stats
         self.kills = []
         self.assists = []
         self.deaths = []
-        self.suicides = 0
         self.damage = []
         self.damage_received = []
-        self.healing_received = 0
+        self.healing_received = []
         self.captures = []
         self.capture_blocks = []
-        self.airshots = 0
-        self.enemy_drops = 0
+        self.buildings_destroyed = []
 
         self.shots_hit = dict()
         self.shots_fired = dict()
 
-        self.pickups_collected = dict()
+        self.pickups_collected = []
 
         self.chat = []
 
         # medic stats
         self.ubers_used = dict()
-        self.ubers_built = 0
-        self.healing = 0
+        # self.ubers_built = 0
+        self.healing_done = []
         self.self_drops = 0
 
         # engineer stats
-        self.sentries = dict()
-        self.sentry_healing = 0
+        self.buildings_built = []
 
         # sniper stats
         self.headshots = 0
@@ -44,17 +39,23 @@ class PlayerRoundStats(object):
         # spy stats
         self.backstabs = 0
 
+    def destroy_building(self, building):
+        self.buildings_destroyed.append(building)
+
+    def build_building(self, building):
+        self.buildings_built.append(building)
+
     def do_damage(self, damage_stat):
         self.damage.append(damage_stat)
 
     def receive_damage(self, damage_stat):
         self.damage_received.append(damage_stat)
 
-    def do_healing(self, healing):
-        self.healing += healing
+    def do_healing(self, heal_trigger_stat):
+        self.healing_done.append(heal_trigger_stat)
 
-    def receive_healing(self, healing):
-        self.healing_received += healing
+    def receive_healing(self, heal_trigger_stat):
+        self.healing_received.append(heal_trigger_stat)
 
     def fire_shot(self, weapon):
         # check if weapon is in dict, else create
@@ -100,23 +101,52 @@ class PlayerRoundStats(object):
     def block_capture_point(self, point_capture_block_stat):
         self.capture_blocks.append(point_capture_block_stat)
 
-    def say(self, time, message):
-        self.chat.append(dict(time=time, message=message))
+    def say(self, time, message, team_chat):
+        self.chat.append(dict(time=time, message=message, team_chat=team_chat))
 
-    def pick_up_item(self, item):
-        # check if item in dict, else create
-        if item in self.pickups_collected:
-            self.pickups_collected[item] += 1
-        else:
-            self.pickups_collected[item] = 1
+    def pick_up_item(self, item_pickup_stat):
+        self.pickups_collected.append(item_pickup_stat)
 
     def killed(self, kill_stat):
         self.deaths.append(kill_stat)
 
     def get_suicides(self):
         # at the end of the round check self.deaths to get suicides
-        pass
+
+        suicides_death = 0
+        for death in self.deaths:
+            if death.attacker == death.victim:
+                suicides_death += 1
+
+        suicides_kill = 0
+        for kill in self.kills:
+            if kill.attacker == kill.victim:
+                suicides_kill += 1
+
+        # kills and deaths should be the same so verify
+        assert suicides_death == suicides_kill
+        return suicides_kill
 
     def get_time_alive(self):
-        # at the end of the round check for alive time
+        # at the end of the round check for alive time for each class
+        alive_time = dict()
+        return alive_time
+
+    def get_enemy_drops(self):
+        pass
+
+    def get_self_drops(self):
+        pass
+
+    def get_healing_done(self):
+        pass
+
+    def get_healing_received(self):
+        pass
+
+    def get_airshots(self):
+        pass
+
+    def get_accuracy(self):
+        # ignore sentry damage
         pass
