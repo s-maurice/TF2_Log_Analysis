@@ -1,26 +1,38 @@
 class PlayerTriggerStat(object):
     # stats of a player during a trigger tick
-    def __init__(self, player_id, player_class):
-        self.steam_id = None
-        self.name = None
+    steam_id = None
+    name = None
+    player_id = None
+    player_class = None
+    team = None
+    alive = None
+    position = None  # position not always known, only known during specific ticks
+
+    def __init__(self, parsed_tuple):
+        # player assumed to be alive during init
+        (steam_id, name, player_id, team) = parsed_tuple
+        self.steam_id = steam_id
+        self.name = name
         self.player_id = player_id
-        self.player_class = player_class
-        self.position = None
-        self.team = {"Red": False, "Blue": False}
-        self.alive = None
+        self.team = team
+        self.alive = True
 
 
 class PlayersTriggerStat(object):
     # stats of all players during a trigger tick
-    def __init__(self):
-        self.players_red = []
-        self.players_blue = []
+    players = {"Red": [], "Blue": []}
 
     def add_player(self, player_trigger_stat):
-        if player_trigger_stat.team == "red":
-            self.players_red.append(player_trigger_stat)
-        elif player_trigger_stat.team == "blue":
-            self.players_blue.append(player_trigger_stat)
+        assert type(player_trigger_stat) == PlayerTriggerStat
+        self.players[PlayerTriggerStat.team].append(PlayerTriggerStat)
+
+    def get_player_by_steam_id(self, steam_id):
+        # gets the player with the matching steam_id, return None if player not in
+        for player in [i for value in self.players.values() for i in value]:
+            if player.steam_id == steam_id:
+                return player
+        else:
+            return None
 
 
 class DamageStats(object):
