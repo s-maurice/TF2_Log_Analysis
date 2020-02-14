@@ -52,3 +52,34 @@ for line in test_logs:
     print(target)
     print(details)
     print("\n")
+
+    # all details parsed - now get statistics
+    # for every tick, update and append the PlayersTriggerStat - remember to deep copy
+    current_players_trigger_stat = copy.deepcopy(players_trigger_stat_list[-1])
+
+    # on player spawning ticks, update the player class
+    if action == "spawned as":
+        # first try to find existing player and modify
+        current_player_trigger_stat = current_players_trigger_stat.get_player_by_steam_id(origin[2])
+        # check if player is existing, if not create
+        if current_player_trigger_stat is None:
+            current_player_trigger_stat = PlayerTriggerStat(origin)
+        # set the class which is the target
+        current_player_trigger_stat.player_class = target
+    elif action == "changed role to":
+        # ignore, because player hasn't spawned as this class yet
+        pass
+    elif action == "Round_Start":
+        pass
+    elif action == "shot_hit":
+        pass
+    elif action == "shot_fired":
+        pass
+    elif action == "killed":
+        pass
+    elif action == "picked up item":
+        pass
+    elif action == "damage":
+        pass
+    elif action == "healed":
+        pass
