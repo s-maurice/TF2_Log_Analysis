@@ -45,6 +45,14 @@ for line in test_logs:
         if len(trigger_against_list) > 0:
             action = trigger_against_list[0][0]
             target = trigger_against_list[0][1:]
+    # for "killed", "current score" actions, re-parse to get the with attribute and add to details with type "with"
+    if action == "killed" or action == "current score" or action == "committed suicide with":
+        # convert committed suicide with to committed suicide and then parse "with" in the same way for consistency
+        if action == "committed suicide with":
+            action = "committed suicide"
+        details.append(re.findall('(with) "(\w*?)"', line)[0])
+
+
 
     print(line[25:-1])
     print(time)
@@ -83,4 +91,4 @@ for line in test_logs:
                 target_trigger_stat.set_position_by_string(detail[1])
         # construct a KillStat
         # TODO parser needs to parse kill with "weapon" and other with statements (committed suicide, current score)
-        kill_stat = KillStat(origin_trigger_stat, target_trigger_stat, weapon=None)
+        kill_stat = KillStat(origin_trigger_stat, target_trigger_stat, weapon="gun")
