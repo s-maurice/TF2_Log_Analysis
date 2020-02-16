@@ -35,7 +35,7 @@ class PlayersTriggerStat(object):
             return None
 
 
-class DamageStats(object):
+class DamageStat(object):
     # stats of each damage instance
     # can check distance, height to see if airshot
     def __init__(self):
@@ -49,21 +49,30 @@ class DamageStats(object):
         self.weapon = 0
 
 
-class KillStats(object):
+class KillStat(object):
     # stats of each kill, death, or assist
-    # can get distance of medic to heal target on assist
-    def __init__(self):
-        # self.type = {"attacker": False, "assister": False, "victim": False}
+    def __init__(self, assister=False):
         self.uber_drop = None
 
         self.time = None
 
         self.attacker = None  # instance of PlayerTriggerStat with given position
-        self.assister = None  # instance of PlayerTriggerStat with given position
         self.victim = None  # instance of PlayerTriggerStat with given position
 
+        self.assister = assister  # instance of AssistStat
 
-class PointCaptureBlockStats(object):
+
+class AssistStat(object):
+    # stats of a kill assist
+    # can get distance of medic to heal target on assist
+    def __init__(self, assister, victim):
+        self.time = None
+
+        self.assister = assister  # instance of PlayerTriggerStat with given position
+        self.victim = victim  # instance of PlayerTriggerStat with given position
+
+
+class PointCaptureBlockStat(object):
     # stats of capture point blocks
     def __init__(self):
         self.cp_id = None
@@ -72,7 +81,7 @@ class PointCaptureBlockStats(object):
         self.blocker = None  # instance of PlayerTriggerStat with given position
 
 
-class PointCaptureStats(object):
+class PointCaptureStat(object):
     # stats of capture point captures
     def __init__(self):
         self.cp_id = None
