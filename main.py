@@ -58,16 +58,16 @@ for line in test_logs:
     # for every tick, update and append the PlayersTriggerStat - remember to deep copy
     current_players_trigger_stat = copy.deepcopy(players_trigger_stat_list[-1])
 
-    # on player spawning ticks, update the player class
-    if action == "spawned as":
+    if action == ActionsTriggers.SPAWNED_AS:
+        # on player spawning ticks, update the player class
         # first try to find existing player and modify
-        current_player_trigger_stat = current_players_trigger_stat.get_player_by_steam_id(origin[2])
+        spawner_trigger_stat = current_players_trigger_stat.get_player_by_steam_id(origin[2])
         # check if player is existing, if not create
-        if current_player_trigger_stat is None:
-            current_player_trigger_stat = PlayerTriggerStat(origin)
+        if spawner_trigger_stat is None:
+            spawner_trigger_stat = PlayerTriggerStat(origin)
         # set the class which is the target
-        current_player_trigger_stat.player_class = target
-    elif action == "changed role to":
+        spawner_trigger_stat.player_class = target
+    elif action == ActionsTriggers.CHANGED_ROLE_TO:
         # ignore, because player hasn't spawned as this class yet
         pass
     elif action == "Round_Start":
