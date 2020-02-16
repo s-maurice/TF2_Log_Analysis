@@ -56,6 +56,7 @@ class DamageStat(object):
 
 class KillStat(object):
     # stats of each kill, death, or assist
+    # can get distance of medic to heal target on assist
     def __init__(self, attacker, victim, weapon):
         self.uber_drop = None
         self.weapon = weapon
@@ -65,17 +66,14 @@ class KillStat(object):
         self.attacker = attacker  # instance of PlayerTriggerStat with given position
         self.victim = victim  # instance of PlayerTriggerStat with given position
 
-        self.assister = False  # instance of AssistStat, or false if unassisted
+        self.assisted = False
+        self.assister = None  # instance of PlayerTriggerStat with given position
 
-
-class AssistStat(object):
-    # stats of a kill assist
-    # can get distance of medic to heal target on assist
-    def __init__(self, assister, victim):
-        self.time = None
-
-        self.assister = assister  # instance of PlayerTriggerStat with given position
-        self.victim = victim  # instance of PlayerTriggerStat with given position
+    def add_assister(self, assister):
+        # adds an assister to the kill stat
+        assert assister.position is not False
+        self.assisted = True
+        self.assister = assister
 
 
 class PointCaptureBlockStat(object):
