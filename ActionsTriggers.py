@@ -38,8 +38,9 @@ def get_detail_attributes(logs_dir="logs"):
     return detail_set
 
 
-class ActionsTriggers(Enum):
+class ActionsTriggers(object):
     # stores the actions/triggers
+    # TODO turn back to enum
 
     # committed suicide is converted for consistency in parsing of "with"
     # COMMITTED_SUICIDE_WITH = 'committed suicide with'  # auto generated
@@ -77,9 +78,10 @@ class ActionsTriggers(Enum):
     SPAWNED_AS = 'spawned as'
 
 
-class DetailAttributes(Enum):
+class DetailAttributes(object):
     # stores the  detail names
     # TODO handle numerical positions
+    # TODO turn back to enum
 
     # handles manually added "with" detail
     WITH = 'with'
