@@ -66,14 +66,28 @@ class KillStat(object):
         self.attacker = attacker  # instance of PlayerTriggerStat with given position
         self.victim = victim  # instance of PlayerTriggerStat with given position
 
-        self.assisted = False
         self.assister = None  # instance of PlayerTriggerStat with given position
 
     def add_assister(self, assister):
         # adds an assister to the kill stat
-        assert assister.position is not False
-        self.assisted = True
+        assert assister.position is not None
         self.assister = assister
+
+    def get_dist_attacker_victim(self):
+        # gets the distance between the attacker and the victim
+        return self.get_dist(self.attacker, self.victim)
+
+    def get_dist_assister_attacker(self):
+        # gets the distance between the assister and attacker
+        if self.assister is not None:
+            return self.get_dist(self.assister, self.attacker)
+        else:
+            return 0
+
+    @staticmethod
+    def get_dist(from_pos, to_pos):
+        squared = [(i-ii)**2 for i, ii in zip(from_pos, to_pos)]
+        return sum(squared)**0.5
 
 
 class PointCaptureBlockStat(object):
