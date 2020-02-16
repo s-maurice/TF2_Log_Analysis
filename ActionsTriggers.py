@@ -40,6 +40,12 @@ def get_detail_attributes(logs_dir="logs"):
 
 class ActionsTriggers(Enum):
     # stores the actions/triggers
+
+    # committed suicide is converted for consistency in parsing of "with"
+    # COMMITTED_SUICIDE_WITH = 'committed suicide with'  # auto generated
+    COMMITTED_SUICIDE = 'committed suicide'  # manually, using if to convert during parsing instead of regex
+
+    # auto generated
     GAME_OVER = 'Game_Over'
     ROUND_LENGTH = 'Round_Length'
     ROUND_START = 'Round_Start'
@@ -48,7 +54,6 @@ class ActionsTriggers(Enum):
     CHANGED_ROLE_TO = 'changed role to'
     CHARGEDEPLOYED = 'chargedeployed'
     CHARGEREADY = 'chargeready'
-    COMMITTED_SUICIDE_WITH = 'committed suicide with'
     CURRENT_SCORE = 'current score'
     DAMAGE = 'damage'
     DOMINATION = 'domination'
@@ -75,6 +80,11 @@ class ActionsTriggers(Enum):
 class DetailAttributes(Enum):
     # stores the  detail names
     # TODO handle numerical positions
+
+    # handles manually added "with" detail
+    WITH = 'with'
+
+    # auto generated
     AIRSHOT = 'airshot'
     ASSIST = 'assist'
     ASSISTER_POSITION = 'assister_position'
