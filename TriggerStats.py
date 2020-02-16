@@ -54,6 +54,16 @@ class DamageStat(object):
         self.weapon = 0
 
 
+class HealStat(object):
+    # stat for each heal trigger
+    def __init__(self):
+        self.healing = 0
+        self.arrow = False  # is healing from crusaders crossbow
+
+        self.healer = None  # instance of PlayerTriggerStat
+        self.receiver = None  # instance of PlayerTriggerStat
+
+
 class KillStat(object):
     # stats of each kill, death, or assist
     # can get distance of medic to heal target on assist
@@ -107,17 +117,6 @@ class PointCaptureStat(object):
 
         self.num_cappers = 0
         self.cappers = []  # list of PlayerTriggerStats with given position
-
-
-class HealTriggerStat(object):
-    # stat for each heal trigger
-    def __init__(self):
-        self.healing = 0
-        self.arrow = False  # is healing from crusaders crossbow
-
-        self.healer = None  # instance of PlayerTriggerStat
-        self.receiver = None  # instance of PlayerTriggerStat
-
 
 class ItemPickupStat(object):
     # stat from each item pickup
