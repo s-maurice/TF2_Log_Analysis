@@ -3,7 +3,7 @@ import copy
 import pandas as pd
 import re
 from TriggerStats import *
-from ActionsTriggers import ActionsTriggers
+from ActionsTriggers import ActionsTriggers, DetailAttributes
 
 # no support for tf2center logs, as extra plugins - only focus on pugchamp
 
@@ -57,6 +57,7 @@ for line in test_logs:
     # all details parsed - now get statistics
     # for every tick, update and append the PlayersTriggerStat - remember to deep copy
     current_players_trigger_stat = copy.deepcopy(players_trigger_stat_list[-1])
+    current_players_trigger_stat.clear_positions()  # remove the positions from the previous tick
 
     if action == ActionsTriggers.SPAWNED_AS:
         # on player spawning ticks, update the player class
@@ -70,17 +71,16 @@ for line in test_logs:
     elif action == ActionsTriggers.CHANGED_ROLE_TO:
         # ignore, because player hasn't spawned as this class yet
         pass
-    elif action == "Round_Start":
-        pass
-    elif action == "shot_hit":
-        pass
-    elif action == "shot_fired":
-        pass
-    elif action == "killed":
-        pass
-    elif action == "picked up item":
-        pass
-    elif action == "damage":
-        pass
-    elif action == "healed":
-        pass
+    elif action == ActionsTriggers.KILLED:
+        # get the PlayerTriggerStat for the killer and killed from the most recent PlayersTriggerStat
+        origin_trigger_stat = current_players_trigger_stat.get_player_by_steam_id(origin[2])
+        target_trigger_stat = current_players_trigger_stat.get_player_by_steam_id(target[2])
+        # add the position for this current tick, copy is already made for each tick, assume unsorted, loop
+        for detail in details:
+            if detail[0] == DetailAttributes.ATTACKER_POSITION:
+                origin_trigger_stat.set_position_by_string(detail[1])
+            if detail[0] == DetailAttributes.VICTIM_POSITION:
+                target_trigger_stat.set_position_by_string(detail[1])
+        # construct a KillStat
+        # TODO parser needs to parse kill with "weapon" and other with statements (committed suicide, current score)
+        kill_stat = KillStat(origin_trigger_stat, target_trigger_stat, weapon=None)
