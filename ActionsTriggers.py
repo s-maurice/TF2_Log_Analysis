@@ -2,6 +2,7 @@ from enum import Enum
 
 
 def generate_from(actions_list):
+    # cant use auto() and _generate_next_value_ because the exact value needs to match the string, not the enum name
     actions_list.sort()
     for i in actions_list:
         return i.replace(" ", "_").upper() + " = '" + i + "'"
