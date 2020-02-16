@@ -42,31 +42,32 @@ class PlayersTriggerStat(object):
 
 class DamageStat(object):
     # stats of each damage instance
-    # can check distance, height to see if airshot
-    def __init__(self):
+
+    def __init__(self, attacker, victim, damage, weapon):
         # self.type = {"attacker": False, "victim": False}
 
-        self.attacker = None  # instance of PlayerTriggerStat
-        self.victim = None  # instance of PlayerTriggerStat
+        self.attacker = attacker  # instance of PlayerTriggerStat
+        self.victim = victim  # instance of PlayerTriggerStat
 
-        self.damage = 0
-        self.realdamage = 0
-        self.weapon = 0
+        self.damage = damage
+        self.weapon = weapon
 
 
 class HealStat(object):
     # stat for each heal trigger
-    def __init__(self):
-        self.healing = 0
-        self.arrow = False  # is healing from crusaders crossbow
+    # can get the average healing per beam time or beam efficiency or arrow efficiency
+    def __init__(self, healer, receiver, healing):
+        self.healing = healing
+        self.crossbow = False  # is healing from crusaders crossbow
 
-        self.healer = None  # instance of PlayerTriggerStat
-        self.receiver = None  # instance of PlayerTriggerStat
+        self.healer = healer  # instance of PlayerTriggerStat
+        self.receiver = receiver  # instance of PlayerTriggerStat
 
 
 class KillStat(object):
     # stats of each kill, death, or assist
     # can get distance of medic to heal target on assist
+    # can get distance of kill, check for airshot
     def __init__(self, attacker, victim, weapon):
         self.uber_drop = None
         self.weapon = weapon

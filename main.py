@@ -66,6 +66,7 @@ for line in test_logs:
     current_players_trigger_stat = copy.deepcopy(players_trigger_stat_list[-1])
     current_players_trigger_stat.clear_positions()  # remove the positions from the previous tick
 
+    # TODO replace if with func dict
     if action == ActionsTriggers.SPAWNED_AS:
         # on player spawning ticks, update the player class
         # first try to find existing player and modify
@@ -90,7 +91,7 @@ for line in test_logs:
         target_trigger_stat.set_position_by_string(details[DetailAttributes.VICTIM_POSITION])
         weapon = details.get(DetailAttributes.WITH, "unknown")
         # construct a KillStat
-        kill_stat = KillStat(origin_trigger_stat, target_trigger_stat, weapon=weapon)
+        kill_stat = KillStat(origin_trigger_stat, target_trigger_stat, weapon)
 
     elif action == ActionsTriggers.COMMITTED_SUICIDE:
         # copy of ActionsTriggers.KILLED, except attacker and victim are the same PlayerTriggerStat
@@ -100,7 +101,7 @@ for line in test_logs:
         origin_trigger_stat.set_position_by_string(details[DetailAttributes.ATTACKER_POSITION])
         weapon = details.get(DetailAttributes.WITH, "unknown")
         # construct a KillStat
-        kill_stat = KillStat(origin_trigger_stat, origin_trigger_stat, weapon=weapon)
+        kill_stat = KillStat(origin_trigger_stat, origin_trigger_stat, weapon)
 
     elif action == ActionsTriggers.KILL_ASSIST:
         # kill assist lines always follow the kill lines, double check - assert target, victim pos, attacker pos
@@ -111,4 +112,25 @@ for line in test_logs:
         # TODO get the KillStat and add the assist
         kill_stat = None
         kill_stat.add_assister(assister_trigger_stat)
+
+    elif action == ActionsTriggers.SHOT_FIRED:
+        pass
+
+    elif action == ActionsTriggers.SHOT_HIT:
+        pass
+
+    elif action == ActionsTriggers.HEALED:
+        # on crusaders crossbow, previous trigger is shot hit
+        origin_trigger_stat = current_players_trigger_stat.get_player_by_steam_id(origin[2])
+        target_trigger_stat = current_players_trigger_stat.get_player_by_steam_id(target[2])
+        healing = details.get(DetailAttributes.HEALING, 0)
+        heal_stat = HealStat(origin_trigger_stat, target_trigger_stat, healing)
+        # TODO check if arrow
+
+    elif action == ActionsTriggers.DAMAGE:
+        origin_trigger_stat = current_players_trigger_stat.get_player_by_steam_id(origin[2])
+        target_trigger_stat = current_players_trigger_stat.get_player_by_steam_id(target[2])
+        damage = details.get(DetailAttributes.REALDAMAGE, DetailAttributes.DAMAGE)
+        weapon = details.get(DetailAttributes.WEAPON)
+        damage_stat = DamageStat(origin_trigger_stat, target_trigger_stat, damage, weapon)
 
