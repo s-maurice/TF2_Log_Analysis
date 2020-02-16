@@ -17,6 +17,11 @@ class PlayerTriggerStat(object):
         self.team = team
         self.alive = True
 
+    def set_position_by_string(self, pos_string):
+        # use @property?
+        # takes position string, splits by " " and stores pos tuple
+        self.position = tuple(pos_string.split(" "))
+
 
 class PlayersTriggerStat(object):
     # stats of all players during a trigger tick
@@ -33,6 +38,11 @@ class PlayersTriggerStat(object):
                 return player
         else:
             return None
+
+    def clear_positions(self):
+        # goes through the players and removes the positions, as positions are only valid for a single tick
+        for player in [i for value in self.players.values() for i in value]:
+            player.position = None
 
 
 class DamageStat(object):
@@ -51,15 +61,16 @@ class DamageStat(object):
 
 class KillStat(object):
     # stats of each kill, death, or assist
-    def __init__(self, assister=False):
+    def __init__(self, attacker, victim, weapon):
         self.uber_drop = None
+        self.weapon = weapon
 
         self.time = None
 
-        self.attacker = None  # instance of PlayerTriggerStat with given position
-        self.victim = None  # instance of PlayerTriggerStat with given position
+        self.attacker = attacker  # instance of PlayerTriggerStat with given position
+        self.victim = victim  # instance of PlayerTriggerStat with given position
 
-        self.assister = assister  # instance of AssistStat
+        self.assister = False  # instance of AssistStat, or false if unassisted
 
 
 class AssistStat(object):
