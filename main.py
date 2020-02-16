@@ -52,8 +52,6 @@ for line in test_logs:
             action = "committed suicide"
         details.append(re.findall('(with) "(\w*?)"', line)[0])
 
-
-
     print(line[25:-1])
     print(time)
     print(origin)
@@ -83,12 +81,16 @@ for line in test_logs:
         # get the PlayerTriggerStat for the killer and killed from the most recent PlayersTriggerStat
         origin_trigger_stat = current_players_trigger_stat.get_player_by_steam_id(origin[2])
         target_trigger_stat = current_players_trigger_stat.get_player_by_steam_id(target[2])
-        # add the position for this current tick, copy is already made for each tick, assume unsorted, loop
+        # parse the details, begin with undefined weapon
+        weapon = "unknown"
         for detail in details:
+            # add the position for this current tick, copy is already made for each tick
             if detail[0] == DetailAttributes.ATTACKER_POSITION:
                 origin_trigger_stat.set_position_by_string(detail[1])
-            if detail[0] == DetailAttributes.VICTIM_POSITION:
+            elif detail[0] == DetailAttributes.VICTIM_POSITION:
                 target_trigger_stat.set_position_by_string(detail[1])
+            # get the weapon
+            elif detail[0] == DetailAttributes.WITH:
+                weapon = detail[1]
         # construct a KillStat
-        # TODO parser needs to parse kill with "weapon" and other with statements (committed suicide, current score)
-        kill_stat = KillStat(origin_trigger_stat, target_trigger_stat, weapon="gun")
+        kill_stat = KillStat(origin_trigger_stat, target_trigger_stat, weapon=weapon)
