@@ -74,8 +74,9 @@ for line in test_logs:
         # check if player is existing, if not create
         if spawner_trigger_stat is None:
             spawner_trigger_stat = PlayerTriggerStat(origin)
-        # set the class which is the target
+        # set the class and the alive status
         spawner_trigger_stat.player_class = target
+        spawner_trigger_stat.alive = True
 
     elif action == ActionsTriggers.CHANGED_ROLE_TO:
         # ignore, because player hasn't spawned as this class yet
@@ -85,6 +86,7 @@ for line in test_logs:
         # get the PlayerTriggerStat for the killer and killed from the most recent PlayersTriggerStat
         origin_trigger_stat = current_players_trigger_stat.get_player_by_steam_id(origin[2])
         target_trigger_stat = current_players_trigger_stat.get_player_by_steam_id(target[2])
+        target_trigger_stat.alive = False  # set target to dead
         # parse the details
         # add the position for this current tick, copy is already made for each tick
         origin_trigger_stat.set_position_by_string(details[DetailAttributes.ATTACKER_POSITION])
