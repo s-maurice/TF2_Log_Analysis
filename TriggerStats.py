@@ -1,11 +1,6 @@
 class PlayerTriggerStat(object):
     # stats of a player during a trigger tick
-    steam_id = None
-    name = None
-    player_id = None
     player_class = None
-    team = None
-    alive = None
     position = None  # position not always known, only known during specific ticks
 
     def __init__(self, parsed_tuple):
