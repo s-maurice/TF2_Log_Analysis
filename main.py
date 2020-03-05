@@ -71,6 +71,7 @@ for line_index, line in enumerate(test_logs):
     # for every tick, update and append the PlayersTriggerStat - remember to deep copy
     current_players_trigger_stat = copy.deepcopy(players_trigger_stat_list[-1])
     current_players_trigger_stat.clear_positions()  # remove the positions from the previous tick
+    current_players_trigger_stat.set_time(time)
 
     # TODO replace if with func dict
     if action == ActionsTriggers.SPAWNED_AS:
@@ -161,7 +162,10 @@ for line_index, line in enumerate(test_logs):
         point_capture_stat = PointCaptureStat(capturing_team, cp_id, cp_name, num_cappers, cappers)
 
     elif action == ActionsTriggers.CAPTUREBLOCKED:
-        pass
+        origin_trigger_stat = current_players_trigger_stat.get_player_by_steam_id(origin[2])
+        cp_id = details["cp"]
+        cp_name = details["cpname"]
+        capture_block_stat = PointCaptureBlockStat(origin_trigger_stat, cp_id, cp_name)
 
     elif action == ActionsTriggers.PICKED_UP_ITEM:
         origin_trigger_stat = current_players_trigger_stat.get_player_by_steam_id(origin[2])
