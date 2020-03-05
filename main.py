@@ -148,7 +148,17 @@ for line_index, line in enumerate(test_logs):
         damage_stat = DamageStat(origin_trigger_stat, target_trigger_stat, damage, weapon)
 
     elif action == ActionsTriggers.POINTCAPTURED:
-        pass
+        capturing_team = origin
+        cp_id = details["cp"]
+        cp_name = details["cpname"]
+        num_cappers = details["numcappers"]
+        cappers = []
+        for capper_num in range(1, num_cappers+1):
+            player_string = details.get("player"+str(capper_num))
+            # parse player string, possibly move to func
+            _, _, steam_id, _ = re.findall("([\w ]*)<(\d+)><\[(U:1:\d+?)\]><(Red|Blue|RED|BLUE)>", player_string)[0]
+            cappers.append(current_players_trigger_stat.get_player_by_steam_id(steam_id))
+        point_capture_stat = PointCaptureStat(capturing_team, cp_id, cp_name, num_cappers, cappers)
 
     elif action == ActionsTriggers.CAPTUREBLOCKED:
         pass
