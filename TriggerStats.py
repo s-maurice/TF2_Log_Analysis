@@ -21,6 +21,7 @@ class PlayerTriggerStat(object):
 class PlayersTriggerStat(object):
     # stats of all players during a trigger tick
     players = {"Red": [], "Blue": []}
+    time = None
 
     def add_player(self, player_trigger_stat):
         assert type(player_trigger_stat) == PlayerTriggerStat
@@ -38,6 +39,10 @@ class PlayersTriggerStat(object):
         # goes through the players and removes the positions, as positions are only valid for a single tick
         for player in [i for value in self.players.values() for i in value]:
             player.position = None
+
+    def set_time(self, time_string):
+        # ODO add parsing
+        self.time = time_string
 
 
 class DamageStat(object):
@@ -74,6 +79,11 @@ class KillStat(object):
 
         self.time = None
 
+        assert isinstance(attacker, PlayerTriggerStat)
+        assert isinstance(victim, PlayerTriggerStat)
+        assert attacker.position is not None
+        assert victim.position is not None
+
         self.attacker = attacker  # instance of PlayerTriggerStat with given position
         self.victim = victim  # instance of PlayerTriggerStat with given position
 
@@ -81,6 +91,7 @@ class KillStat(object):
 
     def add_assister(self, assister):
         # adds an assister to the kill stat
+        assert assister.position is not None
         assert assister.position is not None
         self.assister = assister
 
@@ -103,26 +114,34 @@ class KillStat(object):
 
 class PointCaptureBlockStat(object):
     # stats of capture point blocks
-    def __init__(self):
-        self.cp_id = None
-        self.cp_name = None
+    def __init__(self, blocker, cp_id, cp_name):
+        self.cp_id = cp_id
+        self.cp_name = cp_name
 
-        self.blocker = None  # instance of PlayerTriggerStat with given position
+        assert isinstance(blocker, PlayerTriggerStat)
+        assert blocker.position is not None
+        self.blocker = blocker  # instance of PlayerTriggerStat with given position
 
 
 class PointCaptureStat(object):
     # stats of capture point captures
-    def __init__(self):
+    def __init__(self, capturing_team, cp_id, cp_name, num_cappers, capper_list):
+        self.capturing_team = capturing_team
         self.cp_id = None
         self.cp_name = None
 
         self.num_cappers = 0
-        self.cappers = []  # list of PlayerTriggerStats with given position
+        assert all(isinstance(i, PlayerTriggerStat) for i in capper_list)
+        assert all(i.position is not None for i in capper_list)
+        assert len(capper_list) == self.num_cappers
+        self.cappers = capper_list  # list of PlayerTriggerStats with given position
+
 
 class ItemPickupStat(object):
     # stat from each item pickup
-    def __init__(self, item, player):
+    def __init__(self, player, item):
         self.healing = 0
         self.item = item
 
-        self.player = None  # instance of PlayerTriggerStat
+        assert isinstance(player, PlayerTriggerStat)
+        self.player = player  # instance of PlayerTriggerStat
